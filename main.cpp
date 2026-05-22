@@ -16,6 +16,26 @@ void convertToCharPointerArray(vector<char *> &args, vector<string> &tokens)
     args.push_back(NULL);
 }
 
+void getTokens(vector<string> &tokens, string &command)
+{
+    stringstream ss(command);
+
+    string arg;
+
+    while (ss >> arg)
+    {
+        tokens.push_back(arg);
+    }
+}
+
+void getCommand(int start, int end, vector<string> &command, vector<string> &tokens)
+{
+    for (int i = start; i < end; i++)
+    {
+        command.push_back(tokens[i]);
+    }
+}
+
 int main()
 {
     string command;
@@ -34,14 +54,7 @@ int main()
 
         vector<string> tokens;
 
-        stringstream ss(command);
-
-        string arg;
-
-        while (ss >> arg)
-        {
-            tokens.push_back(arg);
-        }
+        getTokens(tokens, command);
 
         int size = tokens.size();
 
@@ -63,21 +76,13 @@ int main()
 
         if (pipeIndex != -1)
         {
-            vector<string> leftTokens;
+            vector<string> leftTokens, rightTokens;
 
-            for (int i = 0; i < pipeIndex; i++)
-            {
-                leftTokens.push_back(tokens[i]);
-            }
-
-            vector<string> rightTokens;
-
-            for (int i = pipeIndex + 1; i < tokens.size(); i++)
-            {
-                rightTokens.push_back(tokens[i]);
-            }
+            getCommand(0, pipeIndex, leftTokens, tokens);
+            getCommand(pipeIndex + 1, size, rightTokens, tokens);
 
             vector<char *> leftCommand, rightCommand;
+            
             convertToCharPointerArray(leftCommand, leftTokens);
             convertToCharPointerArray(rightCommand, rightTokens);
 
